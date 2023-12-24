@@ -102,6 +102,18 @@ def write_to_log(l):
     except Exception as e:
         print(f'Error writing "{l}" to log. Error: {e}')
 
+def printl(l):
+    """print but also write to log"""
+    try:
+        dt = get_dt()
+        with open("logs/bot.log", "a") as f:
+            print(l)
+            f.write(f"{dt} -   {l}\n")
+    except UnicodeEncodeError:
+        print(f'Error writing to log. Content contains an un-writable unicode char.')
+    except Exception as e:
+        print(f'Error writing "{l}" to log. Error: {e}')
+
 def logger():
     def predicate(ctx):
         if 'help' in ctx.message.content:
