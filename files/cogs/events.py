@@ -1,5 +1,5 @@
 ## Events hook cog
-## Cog Version: 0.0.2.2
+## Cog Version: 0.0.2.3
 
 
 import discord, time, datetime, asyncio
@@ -43,6 +43,7 @@ class Events(commands.Cog):
             total = t1 - self.t0
             total = round(total)
             print(stylize(f'Bot ready!', fg(2)))
+            print(stylize(f'Logged in as {self.bot.user}', fg(2)))
             print(stylize(f'Loading time: {total} seconds', fg(8)))
             print(stylize(f'WS latency: {round(self.bot.latency * 1000)}ms', fg(8)))
             print(stylize(f'Currently serving {len(self.bot.guilds)} guilds', fg(8)))
