@@ -187,6 +187,15 @@ def is_botadmin():
                 await ctx.channel.send(f'You are not permitted to use the command: `{ctx.command}`')
     return commands.check(predicate)
 
+async def is_botadmin_interaction(interaction: discord.Interaction):
+    # same thing as is_botadmin but works for interactions/slash commands
+    botadmins = interaction.client.db.get('botadmins')
+    if interaction.user.id in botadmins:
+        return True
+    else:
+        await interaction.response.send_message(f'You are not permitted to use the command: `{interaction.command.name}`')
+        return False
+
 def is_me():
     def predicate(ctx):
         return ctx.message.author.id == 143183268571774976
