@@ -32,7 +32,25 @@ class GuildData:
         guild_data = self.db.get('guild_data')
         return f'{guild_data[self.guild_id]}'
 
+    def __setitem__(self, key, val):
+        # print(f'GuildData[{key=}] = {val=}')
+        guild_data = self.db.get('guild_data')
+        guild_data[self.guild_id][key] = val
+        self.db.set('guild_data', guild_data)
+        self.db.dump()
+        return 1
+
+    def __getitem__(self, key):
+        # print(f'GuildData[{key=}]')
+        guild_data = self.db.get('guild_data')
+        try:
+            val = guild_data[self.guild_id][key]
+            return val
+        except KeyError:
+            return False
+
     def set(self, key, val):
+        # print(f'GuildData.set({key=}, {val=})')
         guild_data = self.db.get('guild_data')
         guild_data[self.guild_id][key] = val
         self.db.set('guild_data', guild_data)
@@ -41,10 +59,26 @@ class GuildData:
         # self.db.dset('guild_data', [key, val])
 
     def get(self, key):
-        print(f'GuildData.get({key=})')
+        # print(f'GuildData.get({key=})')
         guild_data = self.db.get('guild_data')
-        val = guild_data[self.guild_id][key]
-        return val
+        try:
+            val = guild_data[self.guild_id][key]
+            return val
+        except KeyError:
+            return False
+
+    def remove(self, key):
+        # print(f'~GuildData.remove({key=}')
+        guild_data = self.db.get('guild_data')
+        try:
+            gdvr = guild_data[self.guild_id].pop(key)
+        except KeyError:
+            return False
+        else:
+            self.db.set('guild_data', guild_data)
+            self.db.dump()
+            # return gdvr
+            return 1
 
 def get_prefix(client,message):
     prefixes = client.db.get('prefixes')
