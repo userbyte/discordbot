@@ -1,6 +1,6 @@
 # functions and shit shared across various files of the bot
 
-import time, datetime, platform
+import time, datetime, platform, discord
 from discord.ext import commands
 
 def initialize_db(self):
