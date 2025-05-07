@@ -82,9 +82,33 @@ DEV_GUILD_ID = 260166835440320515
 class Bot(commands.Bot):
     async def sync_commands(self):
         cl = []
+        pretty_cog_names = set()
         for command in self.tree.walk_commands():
-            cl.append(f'{command.name} ({command.callback.__qualname__})')
-        print(f'Commands in tree: {cl}')
+            # extract cog name in a really dumb way (i couldnt find a way to climb the tree normally with both hybrid and normal commands)
+            cog_name = command.callback.__qualname__.split('.')[0]
+            # add pretty cog name to our list
+            pretty_cog_names.add(cog_name)
+            # add command info to big command list
+            cl.append([cog_name, command.name])
+
+        # build a pretty tree
+        ct = {}
+        for cog_name in pretty_cog_names:
+            ct[cog_name] = []
+        for command in cl:
+            # really stupid way of doing this
+            # add the command to its respective cog's command list
+            ct[command[0]].append(command[1])
+        # print the pretty tree
+        print('~ Command tree ~')
+        for cog in ct:
+            print(f'⚙ {cog}')
+            for command in ct[cog]:
+                # end the structure with an L pipe char
+                if (ct[cog].index(command) + 1) != len(ct[cog]):
+                    print(f'  ├─ {command}')
+                else:
+                    print(f'  └─ {command}')
         if DEV_SYNC_ONLY:
             print('Syncing commands to dev guild...')
             DEV_GUILD = discord.Object(id=DEV_GUILD_ID) # guild to sync commands to for development testing
